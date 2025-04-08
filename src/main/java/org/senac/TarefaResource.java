@@ -24,7 +24,15 @@ public class TarefaResource {
 
     @POST
     @Transactional
-    public Tarefa cadastrar(Tarefa tarefa) {
+    public Tarefa cadastrar(TarefaDTO dto) {
+        Tarefa tarefa = new Tarefa();
+        tarefa.titulo = dto.titulo;
+        tarefa.descricao = dto.descricao;
+        tarefa.status = dto.status;
+
+        tarefa.usuario = Usuario.findById(dto.idUsuario);
+        tarefa.projeto = Projeto.findById(dto.idProjeto);
+
         tarefa.persist();
         return tarefa;
     }
