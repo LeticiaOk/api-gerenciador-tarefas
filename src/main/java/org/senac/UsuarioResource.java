@@ -17,8 +17,8 @@ import java.util.List;
 public class UsuarioResource {
 
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    @RateLimit(value = 5)
+    @Produces(MediaType.APPLICATION_JSON)
+    @RateLimit(value = 5, window = 1, windowUnit = ChronoUnit.MINUTES)
     @Fallback(fallbackMethod = "fallbackParaRateLimit")
     public List<Usuario> listarTodos() {
         return Usuario.listAll();
@@ -63,6 +63,7 @@ public class UsuarioResource {
     @Path("{id}")
     @Transactional
     @Idempotent
+
     public void deletar(@PathParam("id") Long id) {
         Usuario usuario = Usuario.findById(id);
         if (usuario == null) {

@@ -1,8 +1,9 @@
 package org.senac;
 
 
-import com.github.benmanes.caffeine.cache.Cache;
+import io.quarkus.cache.Cache;
 import io.quarkus.cache.CacheName;
+
 
 import jakarta.annotation.Priority;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -12,6 +13,7 @@ import jakarta.ws.rs.container.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
+
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -32,7 +34,8 @@ public class IdempotencyFilter implements ContainerRequestFilter, ContainerRespo
 
     @Inject
     @CacheName("idempotency-cache")
-    Cache cache;
+    io.quarkus.cache.Cache cache;
+
 
     @Context
     ResourceInfo resourceInfo;
@@ -110,7 +113,8 @@ public class IdempotencyFilter implements ContainerRequestFilter, ContainerRespo
         );
 
         // Armazena o resultado no cache
-        cache.put(context.getCacheKey(), record);
+        cache.get(context.getCacheKey(), k -> CompletableFuture.completedFuture(record));
+
     }
 
     private String createCacheKey(ContainerRequestContext requestContext, String idempotencyKey) {
@@ -164,3 +168,11 @@ public class IdempotencyFilter implements ContainerRequestFilter, ContainerRespo
         }
     }
 }
+
+
+
+
+
+
+
+
